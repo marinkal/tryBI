@@ -22,13 +22,49 @@
 Но в рамках данной задачи я не вижу в этом смысла (просто сохраню все в одну таблицу, тем более ошибок из-за ручного ввода не случится)
 Поэтому я создам только одну таблицу и на основании нее буду строить диаграммы
 |Что такое   |Название поля в БД|Тип данных|Дополнительно|
-|------------|------------------|----------|-------------|
-|Город       |city              |          | 
-|Локация     |loc               |          | 
-|id_участника|id_runner         |          |
-|Дата забега |date_r            |          |
-|Результат   |result            |          |
+|------------|------------------|----------|-------------------|
+|Город       |city              | String   |Поле партицирования
+|Локация     |loc               | String   |Создать индекс
+|id_участника|id_runner         | String   |Создать индекс
+|Дата забега |date_r            | Date     |Создать индекс
+|Группа      |agroup            | String   |Создать индекс
+|Пол         |Bool              | Bool     |True женский/False мужской
+|Результат   |result            | Int16    |
 
+Запрос на создание  БД и таблицы:
+```sql
+create database fivev;
+
+CREATE TABLE fivev.protocols
+(
+   
+    city String NOT NULL,
+    loc String NOT NULL,
+    id_runner String NOT NULL,
+    date_r Date NOT NULL,
+    agroup String NOT NULL,
+    sex Bool NOT NULL,
+    result_ Int8 NOT NULL,
+    INDEX loc_idx loc TYPE set(0) GRANULARITY 3,
+    INDEX runner_idx id_runner TYPE set(0) GRANULARITY 3,
+    INDEX agroup_idx agroup TYPE   set(0) GRANULARITY 3,
+    INDEX date_idx date_r TYPE minmax GRANULARITY 3
+)
+ENGINE = MergeTree
+ORDER BY (city)
+PARTITION BY city
+SETTINGS index_granularity = 8192;
+```
+Для подключениия из airflow создадим отдельного пользователя и роль:
+```sql
+CREATE ROLE etl;
+CREATE USER airflow DEFAULT ROLE etl IDENTIFIED WITH sha256_password BY 'airflow';
+```
+Дадим права на БД fivev
+```sql
+GRANT SELECT ON fivev.* TO etl; 
+GRANT INSERT ON fivev.* TO etl; 
+```
 
 
 ## Создание диаграмм в DataLens 
