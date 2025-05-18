@@ -44,7 +44,7 @@ CREATE TABLE fivev.protocols
     date_r Date NOT NULL,
     agroup String NOT NULL,
     sex Bool NOT NULL,
-    result_ Int8 NOT NULL,
+    result_ Int16 NOT NULL,
     INDEX loc_idx loc TYPE set(0) GRANULARITY 3,
     INDEX runner_idx id_runner TYPE set(0) GRANULARITY 3,
     INDEX agroup_idx agroup TYPE   set(0) GRANULARITY 3,
