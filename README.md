@@ -193,6 +193,7 @@ order by count(DISTINCT loc) desc
 	from fivev.protocols
 	group by date_r, loc
 ```
-В график я добавила необязательный фильтр по полю LOC
-
+В график я добавила необязательный фильтр по полю LOC 
+Так как из выбранных мной локаций zatyumensky 
+![mage_alt](https://github.com/marinkal/tryBI/blob/main/images/1.png)
 ## Создание диаграмм в  Apache superset
